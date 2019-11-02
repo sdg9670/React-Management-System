@@ -8,32 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles'
-const customers = [
-  {
-    'id': 1,
-    'image': 'https://placeimg.com/64/64/1',
-    'name': '홍길동',
-    'birthday': '961222',
-    'gender': '남자',
-    'job': '대학생'
-  },
-  {
-    'id': 2,
-    'image': 'https://placeimg.com/64/64/2',
-    'name': '장준수',
-    'birthday': '970128',
-    'gender': '여자',
-    'job': '백수'
-  },
-  {
-    'id': 3,
-    'image': 'https://placeimg.com/64/64/3',
-    'name': '이재영',
-    'birthday': '961205',
-    'gender': '남자',
-    'job': '편입생'
-  }
-];
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = theme => ({
   root: {
@@ -43,12 +18,37 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1080
+  },
+  progress: {
+    margin: theme.spacing(1) * 2
   }
 });
 
 class App extends React.Component {
+  state = {
+    customers: "",
+    completed: 0
+  }
+  
+  componentDidMount() {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi().then(res => this.setState({customers:res}))
+    .catch(err => console.log(err));
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1});
+
+  }
+
   render() {
-    console.log(this.props);
     const { classes } = this.props;
     return (
       <Paper className={classes.root}>
@@ -65,7 +65,8 @@ class App extends React.Component {
             </TableHead>
             <TableBody>
               {
-                customers.map(c => {
+                this.state.customers ?
+                this.state.customers.map(c => {
                   return (
                         <Customer key={c.id}
                         id={c.id}
@@ -76,6 +77,12 @@ class App extends React.Component {
                         job={c.job}/>
                   );
                 })
+                : 
+                <TableRow>
+                  <TableCell colSpan="6" align="center">
+                    <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+                  </TableCell>
+                </TableRow>
               }
             </TableBody>
         </Table>
