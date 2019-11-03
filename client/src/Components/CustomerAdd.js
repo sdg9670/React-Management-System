@@ -76,7 +76,7 @@ class CustomerAdd extends React.Component {
     }
 
     addCustomer = () => {
-        const url = '/api/customers';
+        const url = 'http://www.simpf.ga:5000/api/customers';
         const formData = new FormData();
         formData.append('image', this.state.file);
         formData.append('name', this.state.userName);

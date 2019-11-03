@@ -118,7 +118,7 @@ class App extends React.Component {
   }
 
   callApi = async () => {
-    const response = await fetch('/api/customers');
+    const response = await fetch('http://www.simpf.ga:5000/api/customers');
     const body = await response.json();
     return body;
   }
