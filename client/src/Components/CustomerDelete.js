@@ -28,7 +28,7 @@ class CustomerDelete extends React.Component {
     }
 
     deleteCustomer(id) {
-        const url = '/api/customers/' + id;
+        const url = 'http://www.simpf.ga:5000/api/customers/' + id;
         fetch(url, {
             method: 'DELETE'
         });

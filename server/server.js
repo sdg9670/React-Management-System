@@ -22,7 +22,11 @@ connection.connect();
 const multer = require('multer');
 const upload = multer({dest: './upload'})
 
+const cors = require('cors');
+app.use(cors());
+
 app.get('/api/customers', (req, res) => {
+console.log(req);
     connection.query("SELECT * FROM CUSTOMER WHERE isDeleted = 0", (err, rows, fields) => { res.send(rows); });
 });
 
